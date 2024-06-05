@@ -1,7 +1,7 @@
 # cosmos-exporter
 
-![Latest release](https://img.shields.io/github/v/release/pfc-developer/cosmos-exporter)
-[![Actions Status](https://github.com/pfc-developer/cosmos-exporter/workflows/test/badge.svg)](https://github.com/pfc-developer/cosmos-exporter/actions)
+![Latest release](https://img.shields.io/github/v/release/lavenderfive/cosmos-exporter)
+[![Actions Status](https://github.com/lavenderfive/cosmos-exporter/workflows/test/badge.svg)](https://github.com/lavenderfive/cosmos-exporter/actions)
 
 This is a fork of: https://github.com/solarlabsteam/cosmos-exporter 
 

@@ -14,8 +14,8 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	oracletypes "github.com/pfc-developer/cosmos-exporter/cmd/sei-cosmos-exporter/types"
-	"github.com/pfc-developer/cosmos-exporter/pkg/exporter"
+	oracletypes "github.com/lavenderfive/cosmos-exporter/cmd/sei-cosmos-exporter/types"
+	"github.com/lavenderfive/cosmos-exporter/pkg/exporter"
 )
 
 /*

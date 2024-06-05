@@ -1,4 +1,4 @@
-module github.com/pfc-developer/cosmos-exporter
+module github.com/lavenderfive/cosmos-exporter
 
 go 1.21
 
@@ -165,4 +165,4 @@ require (
 
 replace github.com/gogo/protobuf => github.com/regen-network/protobuf v1.3.3-alpha.regen.1
 
-replace github.com/pfc-developer/cosmos-exporter => ./
+replace github.com/lavenderfive/cosmos-exporter => ./

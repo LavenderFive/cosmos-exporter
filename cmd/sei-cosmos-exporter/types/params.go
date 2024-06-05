@@ -9,7 +9,7 @@ import (
 
 	paramstypes "github.com/cosmos/cosmos-sdk/x/params/types"
 
-	"github.com/pfc-developer/cosmos-exporter/cmd/sei-cosmos-exporter/utils"
+	"github.com/lavenderfive/cosmos-exporter/cmd/sei-cosmos-exporter/utils"
 )
 
 // Parameter keys

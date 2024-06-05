@@ -6,7 +6,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	"github.com/pfc-developer/cosmos-exporter/pkg/cosmosdirectory"
+	"github.com/lavenderfive/cosmos-exporter/pkg/cosmosdirectory"
 )
 
 func TestGetChain(t *testing.T) {

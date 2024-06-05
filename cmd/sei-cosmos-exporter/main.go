@@ -12,7 +12,7 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	"github.com/pfc-developer/cosmos-exporter/pkg/exporter"
+	"github.com/lavenderfive/cosmos-exporter/pkg/exporter"
 )
 
 var (
