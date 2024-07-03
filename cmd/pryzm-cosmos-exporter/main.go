@@ -12,12 +12,17 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	"github.com/lavenderfive/cosmos-exporter/pkg/exporter"
+	"github.com/pfc-developer/cosmos-exporter/pkg/exporter"
 )
 
 var (
 	config exporter.ServiceConfig
 	log    = zerolog.New(zerolog.ConsoleWriter{Out: os.Stdout}).With().Timestamp().Logger()
+)
+
+var (
+	Oracle bool
+	LCD    string
 )
 
 var rootCmd = &cobra.Command{
@@ -26,6 +31,7 @@ var rootCmd = &cobra.Command{
 	PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
 		if config.ConfigPath == "" {
 			config.SetBechPrefixes(cmd)
+
 			return nil
 		}
 
@@ -46,7 +52,6 @@ var rootCmd = &cobra.Command{
 				}
 			}
 		})
-
 		config.SetBechPrefixes(cmd)
 
 		return nil
@@ -66,7 +71,10 @@ func Execute(_ *cobra.Command, _ []string) {
 
 	zerolog.SetGlobalLevel(logLevel)
 
-	config.LogConfig(log.Info()).Msg("Started with following parameters")
+	config.LogConfig(log.Info()).
+		Bool("oracle", Oracle).
+		Str("lcd", LCD).
+		Msg("Started with following parameters")
 
 	sdkconfig := sdk.GetConfig()
 	sdkconfig.SetBech32PrefixForAccount(config.AccountPrefix, config.AccountPubkeyPrefix)
@@ -102,7 +110,7 @@ func Execute(_ *cobra.Command, _ []string) {
 
 	if config.SingleReq {
 		log.Info().Msg("Starting Single Mode")
-		http.HandleFunc("/metrics", s.SingleHandler)
+		http.HandleFunc("/metrics", func(w http.ResponseWriter, r *http.Request) { InjSingleHandler(w, r, s) })
 	}
 	http.HandleFunc("/metrics/wallet", s.WalletHandler)
 	http.HandleFunc("/metrics/validator", s.ValidatorHandler)
@@ -113,30 +121,22 @@ func Execute(_ *cobra.Command, _ []string) {
 	http.HandleFunc("/metrics/delegator", s.DelegatorHandler)
 	http.HandleFunc("/metrics/proposals", s.ProposalsHandler)
 	http.HandleFunc("/metrics/upgrade", s.UpgradeHandler)
+	if config.Prefix == "pryzm" {
+		http.HandleFunc("/metrics/pryzm", func(w http.ResponseWriter, r *http.Request) { PryzmMetricHandler(w, r, s) })
+	}
 
-	/*
-		if Prefix == "sei" {
-			http.HandleFunc("/metrics/sei", func(w http.ResponseWriter, r *http.Request) {
-				OracleMetricHandler(w, r, s.grpcConn)
-			})
-		}
-
-	*/
-	/*
-		http.HandleFunc("/metrics/event", func(w http.ResponseWriter, r *http.Request) {
-			eventCollector.StreamHandler(w, r)
-		})
-	*/
 	log.Info().Str("address", config.ListenAddress).Msg("Listening")
 	err = http.ListenAndServe(config.ListenAddress, nil) // #nosec
 	if err != nil {
-		log.Error().Err(err).Msg("Could not start application")
+		log.Error().Err(err).Msg("could not start application")
 		return
 	}
 }
 
 func main() {
 	config.SetCommonParameters(rootCmd)
+	rootCmd.PersistentFlags().BoolVar(&Oracle, "oracle", false, "serve pryzm oracle info in the single call to /metrics")
+	rootCmd.PersistentFlags().StringVar(&LCD, "lcd", "http://localhost:1317", "LCD endpoint")
 
 	if err := rootCmd.Execute(); err != nil {
 		log.Fatal().Err(err).Msg("Could not start application")
